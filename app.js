@@ -104,6 +104,15 @@ app.post("/leave", (req, res) => {
   res.json({ msg: "Left the room successfully" });
 });
 
+app.post("/clearRoom", (req, res) => {
+  room = {
+    occupants: 0,
+    person1: null,
+    person2: null,
+  };
+  res.json({ msg: "Room cleared successfully" });
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });

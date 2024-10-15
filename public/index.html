@@ -3,20 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RNT</title>
+    <title>birds</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg-primary: #111827;
-        --bg-secondary: #1f2937;
+        --bg-primary: #121212;
+        --bg-secondary: #1d1d1d;
         --text-primary: #f9fafb;
         --text-secondary: #d1d5db;
-        --accent-primary: #3b82f6;
-        --accent-secondary: #2563eb;
-        --danger: #ef4444;
+        --accent-primary: #003c9c;
+        --accent-secondary: #003c9c;
+        --danger: #bc0000;
       }
       * {
         margin: 0;
@@ -132,10 +132,16 @@
   <body>
     <div id="app">
       <header>
+        <button
+          style="padding: 5px 10px; margin-bottom: 20px"
+          onclick="clearRoom()"
+        >
+          Clear Room
+        </button>
         <div id="status"></div>
       </header>
       <div id="join-form">
-        <input type="text" id="name-input" placeholder="Enter your name" />
+        <input type="text" id="name-input" placeholder="Enter your code" />
         <button onclick="joinRoom()">Join Room</button>
       </div>
       <div id="chat-container" style="display: none">
@@ -178,10 +184,21 @@
       }
 
       function joinRoom() {
-        const name = document.getElementById("name-input").value.trim();
-        if (!name) {
-          alert("Please enter a name.");
-          return;
+        const code = document.getElementById("name-input").value.trim();
+        let name;
+
+        if (!code) {
+          return alert("Please enter your code.");
+        }
+
+        if (code === "1284") {
+          name = "Raj";
+        } else if (code === "1101") {
+          name = "Tinni";
+        } else {
+          return alert(
+            "Access denied. This chat system is restricted to authorized users only."
+          );
         }
 
         fetch("/join", {
@@ -278,6 +295,24 @@
             sendMessage();
           }
         });
+
+      function clearRoom() {
+        fetch("/clearRoom", {
+          method: "POST",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data.msg);
+            // Reset the client-side state here
+            currentPerson = null;
+            otherPerson = null;
+            document.getElementById("join-form").style.display = "flex";
+            document.getElementById("chat-container").style.display = "none";
+            document.getElementById("messages").innerHTML = "";
+            updateStatus("Room has been cleared. You can join again.");
+          })
+          .catch((error) => console.error("Error clearing room:", error));
+      }
     </script>
   </body>
 </html>
